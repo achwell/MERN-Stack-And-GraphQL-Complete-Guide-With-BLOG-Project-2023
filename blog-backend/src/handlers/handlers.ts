@@ -15,10 +15,24 @@ const query = new GraphQLObjectType({
                 return User.find();
             }
         },
+        user: {
+            type: UserType,
+            args: {id: {type: new GraphQLNonNull(GraphQLID)}},
+            async resolve(parent, {id}) {
+                return User.findById(id).populate("blogs comments");
+            }
+        },
         blogs: {
             type: new GraphQLList(BlogType),
             async resolve() {
                 return Blog.find();
+            }
+        },
+        blog: {
+            type: BlogType,
+            args: {id: {type: new GraphQLNonNull(GraphQLID)}},
+            async resolve(parent, {id}) {
+                return Blog.findById(id).populate("user comments");
             }
         },
         comments: {

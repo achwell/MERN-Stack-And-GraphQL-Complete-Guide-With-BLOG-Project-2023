@@ -1,14 +1,20 @@
 import {FC} from "react";
+import {useNavigate} from "react-router-dom";
 import {Box, Card, Typography} from "@mui/material";
 import {FcCalendar} from "react-icons/fc";
 import {BlogType} from "../../types/types";
 import {blogStyles, randomBgColor} from "../../styles/blog-list-styles";
 
 const BlogItem:FC<{blog: BlogType}> = ({blog}) => {
-    console.log({blog})
+
+    const navigate = useNavigate();
+
+    const handleClick = async () => {
+        await navigate(`/blog/view/${blog.id}`);
+    }
 
     return (
-        <Card sx={blogStyles.card}>
+        <Card sx={blogStyles.card} onClick={handleClick}>
             <Box sx={{...blogStyles.cardHeader, backgroundColor: randomBgColor()}}>
                 {blog.date && <Box sx={blogStyles.dateContainer}>
                     <FcCalendar size={"30px"}/>

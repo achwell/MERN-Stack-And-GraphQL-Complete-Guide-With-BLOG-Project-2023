@@ -11,8 +11,6 @@ const UserMenu = () => {
     const [open, setOpen] = useState(false)
     const [anchorEl, setsetAnchorEl] = useState<Element |null>(null)
 
-    console.log(anchorEl, Boolean(anchorEl))
-
     const handleLogout = async () => {
         localStorage.removeItem("userData")
         await dispatch(authActions.logout())

@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import {authActions} from "./store/auth-slice";
 import AddBlog from "./components/blogs/AddBlog";
 import Profile from "./components/user/Profile";
+import ViewBlog from "./components/blogs/ViewBlog";
 
 function App() {
     const dispatch = useDispatch();
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/" element={<HomePage/>}></Route>
                     <Route path="/add" element={<AddBlog/>}></Route>
                     <Route path="/auth" element={<Auth/>}></Route>
+                    <Route path="/blog/view/:id" element={<ViewBlog/>}></Route>
                     <Route path="/blogs" element={<Blogs/>}></Route>
                     <Route path="/profile" element={<Profile/>}></Route>
                 </Routes>

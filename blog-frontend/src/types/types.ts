@@ -14,6 +14,7 @@ export type BlogType = {
     comments: CommentType[]
 }
 export type CommentType = {
+    id: string
     text: string
     date: Date
     blog: BlogType
