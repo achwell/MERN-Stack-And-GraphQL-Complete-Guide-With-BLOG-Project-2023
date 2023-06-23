@@ -21,5 +21,19 @@ export const headerStyles: Styles = {
         ":hover": {
             backgroundColor: "#ff9400",
         }
+    },
+    addLink: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 1,
+        position: "absolute",
+        right: "40%",
+        width: "300px",
+        ":hover": {
+            backgroundColor: "rgba(0,0,0,0.5)",
+            borderRadius: 10,
+            cursor: "pointer"
+        }
     }
 }

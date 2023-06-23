@@ -6,27 +6,25 @@ import Blog from "../models/Blog";
 import Comment from "../models/Comment";
 import User from "../models/User";
 
-type DocumentType = Document<any, any, any>
-
 const query = new GraphQLObjectType({
     name: "RootQuery",
     fields: {
         users: {
             type: new GraphQLList(UserType),
             async resolve() {
-                return await User.find();
+                return User.find();
             }
         },
         blogs: {
             type: new GraphQLList(BlogType),
             async resolve() {
-                return await Blog.find();
+                return Blog.find();
             }
         },
         comments: {
             type: new GraphQLList(CommentType),
             async resolve() {
-                return await Comment.find();
+                return Comment.find();
             }
         },
     }
@@ -44,7 +42,7 @@ const mutation = new GraphQLObjectType({
             },
             async resolve(parent, {name, email, password}) {
                 try {
-                    const existingUser: DocumentType = await User.findOne({email})
+                    const existingUser: Document = await User.findOne({email})
                     if (existingUser) return new Error("User Already Exists");
                     const encryptedPassword = hashSync(password)
                     const user = new User({name, email, password: encryptedPassword});
@@ -62,7 +60,7 @@ const mutation = new GraphQLObjectType({
             },
             async resolve(parent, {email, password}) {
                 try {
-                    const existingUser: DocumentType = await User.findOne({email})
+                    const existingUser: Document = await User.findOne({email})
                     if (!existingUser) {
                         return new Error("Wrong username or password");
                     }
@@ -90,7 +88,7 @@ const mutation = new GraphQLObjectType({
                     session.startTransaction({session});
                     const existingUser = await User.findById(user);
                     if (!existingUser) return new Error("User not found");
-                    const blog: DocumentType = new Blog({title, content, date, user});
+                    const blog: Document = new Blog({title, content, date, user});
                     existingUser.blogs.push(blog);
                     await existingUser.save({session});
                     return await blog.save();
@@ -110,7 +108,7 @@ const mutation = new GraphQLObjectType({
             },
             async resolve(parent, {id, title, content}) {
                 try {
-                    const existingBlog: DocumentType = await Blog.findById(id);
+                    const existingBlog: Document = await Blog.findById(id);
                     if (!existingBlog) {
                         return new Error("Blog does not exist")
                     }
@@ -128,7 +126,7 @@ const mutation = new GraphQLObjectType({
             async resolve(parent, {id}) {
                 const session = await startSession();
                 try {
-                    const existingBlog: DocumentType = await Blog.findById(id).populate("user");
+                    const existingBlog: Document = await Blog.findById(id).populate("user");
                     if (!existingBlog) return new Error("Blog does not exist")
                     //@ts-ignore
                     const existingUser = existingBlog.user;
@@ -160,7 +158,7 @@ const mutation = new GraphQLObjectType({
                     if (!existingUser) return new Error("User not found");
                     const existingBlog = await Blog.findById(blog);
                     if (!existingBlog) return new Error("Blog not found");
-                    const comment: DocumentType = new Comment({text, date, blog: existingBlog, user: existingUser});
+                    const comment: Document = new Comment({text, date, blog: existingBlog, user: existingUser});
                     existingBlog.comments.push(comment)
                     existingUser.comments.push(comment);
                     await existingBlog.save({session});
@@ -181,7 +179,7 @@ const mutation = new GraphQLObjectType({
             async resolve(parent, {id}) {
                 const session = await startSession();
                 try {
-                    const comment: DocumentType = await Comment.findById(id);
+                    const comment: Document = await Comment.findById(id);
                     if (!comment) return new Error("Comment does not exist")
                     //@ts-ignore
                     const existingUser = comment.user;

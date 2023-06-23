@@ -13,4 +13,3 @@ export const GET_BLOGS = gql`
         }
     }
 `;
-

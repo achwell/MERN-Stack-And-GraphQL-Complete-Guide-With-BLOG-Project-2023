@@ -13,13 +13,13 @@ export const UserType = new GraphQLObjectType({
         blogs: {
             type: new GraphQLList(BlogType),
             async resolve(parent) {
-                return await Blog.find({user: parent.id});
+                return Blog.find({user: parent.id});
             }
         },
         comments: {
             type: new GraphQLList(CommentType),
             async resolve(parent) {
-                return await Comment.find({user: parent.id});
+                return Comment.find({user: parent.id});
             }
         }
     })
@@ -35,13 +35,13 @@ export const BlogType = new GraphQLObjectType({
         user: {
             type: UserType,
             async resolve(parent) {
-                return await User.findById(parent.user);
+                return User.findById(parent.user);
             }
         },
         comments: {
             type: new GraphQLList(CommentType),
             async resolve(parent) {
-                return await Comment.find({user: parent.id});
+                return Comment.find({user: parent.id});
             }
         }
     })
@@ -55,13 +55,13 @@ export const CommentType = new GraphQLObjectType({
         user: {
             type: UserType,
             async resolve(parent) {
-                return await User.findById(parent.user);
+                return User.findById(parent.user);
             }
         },
         blog: {
             type: BlogType,
             async resolve(parent) {
-                return await Blog.findById(parent.user);
+                return Blog.findById(parent.user);
             }
         },
     })
