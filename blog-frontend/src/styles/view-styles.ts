@@ -9,17 +9,18 @@ export const blogPageStyles: Styles = {
     },
     profileHeader: {
         display: "flex",
-        flexDirection: "column",
-        padding: 1
+        flexDirection: "column"
     },
     headerText: {
-        fontFamily: "Arvo"
+        fontFamily: "Arvo",
+        fontSize: "18px",
+        padding: 1
+
     },
     profileHeaderItems: {
         display: "flex",
         alignItems: "center",
-        padding: 1,
-        gap: 2
+        gap: 1
     },
     blogTitle: {
         fontSize: "30px",
@@ -35,19 +36,42 @@ export const blogPageStyles: Styles = {
         textAlign: "justify",
         fontFamily: "Work Sans",
     },
-    comments: {
-
-    },
     commentBox: {
-
+        padding: 2,
+        display: "flex",
+        alignItems: "center",
+        gap: 2
     },
     commentInputContainer: {
-
+        padding: 2,
+        width: "30%",
+        height: "40%"
+    },
+    inputLayout: {
+        display: "flex",
+        gap: 2,
+        alignItems: "center",
+    },
+    textField: {
+        width: "100%"
+    },
+    comments: {
+        display: "flex",
+        flexDirection: "column"
     },
     commentItem: {
-
+        display: "flex",
+        padding: 1,
+        gap: 1,
+        borderBottom: "1px solid black",
+        borderBottomWidth: 10,
+        margin: 1,
+        alignItems: "center",
+        height: "auto"
     },
     commentText: {
-
+        margin: 2,
+        fontWeight: 600,
+        fontFamily: "Arvo",
     }
 }

@@ -1,11 +1,26 @@
-import {Avatar, Box, Dialog, DialogContent, DialogTitle, LinearProgress, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    LinearProgress,
+    TextField,
+    Typography
+} from "@mui/material";
 import {blogPageStyles} from "../../styles/view-styles";
-import {useQuery} from "@apollo/client";
-import {GET_BLOG_BY_ID, GET_USER_BLOGS} from "../../graphql/queries";
+import {useMutation, useQuery} from "@apollo/client";
+import {useForm} from "react-hook-form";
+import {GET_BLOG_BY_ID} from "../../graphql/queries";
 import {useParams} from "react-router-dom";
-import {CommentType} from "../../types/types";
+import {CommentType, UserType} from "../../types/types";
 import {ImMail} from "react-icons/im";
 import {BsCalendar2DateFill} from "react-icons/bs";
+import {FaComments} from "react-icons/fa";
+import {BiSend} from "react-icons/bi";
+import {ADD_COMMENT} from "../../graphql/mutations";
+import {useEffect, useState} from "react";
 
 function getInitials(name: string) {
     const nameAr = name.split(" ");
@@ -15,11 +30,41 @@ function getInitials(name: string) {
 const ViewBlog = () => {
 
     const {id} = useParams();
+    const [user, setUser] = useState<UserType>()
 
     const { loading, data, error} = useQuery(GET_BLOG_BY_ID, {
         variables: {id},
         skip: !id
     });
+
+
+    console.log({data})
+
+
+    const {register, formState: {errors}, handleSubmit} = useForm<{comment: string}>({mode: "all"});
+
+    const [addComment] = useMutation(ADD_COMMENT);
+
+    const onSubmit = async ({comment}: { comment: string }) => {
+        try {
+            const variables = {
+                text: comment,
+                date: new Date(),
+                user: user?.id,
+                blog: id
+            };
+            await addComment({variables})
+        } catch (error: any) {
+            console.error(error.message)
+        }
+    }
+
+    useEffect(() => {
+        const data = localStorage.getItem("userData");
+        if (!!data && JSON.parse(data) != null) {
+            setUser(JSON.parse(data))
+        }
+    }, [])
 
     if(loading) return <LinearProgress/>
     if(error) return <Dialog open={!!error}>
@@ -48,13 +93,34 @@ const ViewBlog = () => {
             <Typography sx={blogPageStyles.blogTitle}>{title}</Typography>
             <Typography sx={blogPageStyles.blogContent}>{content}</Typography>
             <Box sx={blogPageStyles.commentBox}>
-                <Typography>Comments:</Typography>
+                Comments: {" "}
+                <IconButton><FaComments size={"30px"}/></IconButton>
             </Box>
             <Box sx={blogPageStyles.commentInputContainer}>
-                <Typography margin={2} fontFamily={"Arvo"}>
-                    Add your Comment
-                </Typography>
+                <Typography margin={2} fontFamily={"Arvo"}>Add your Comment</Typography>
+                <Box sx={blogPageStyles.inputLayout}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <TextField
+                        error={Boolean(errors.comment)}
+                        aria-errormessage={errors.comment?.message}
+                        sx={blogPageStyles.textField}
+                        {...register("comment", {required: "You must fill in a comment to add"})}
+                        InputProps={{
+                            style: {
+                                width: "60vW",
+                                borderRadius: "20px",
+                                fontFamily: "Work Sans"
+                            },
+                            endAdornment: (
+                                <IconButton type="submit">
+                                    <BiSend size={"25"}/>
+                                </IconButton>
+                            )
+                        }}/>
+                    </form>
+                </Box>
             </Box>
+            <Box sx={blogPageStyles.comments}>
             {comments.length > 0 && (
                 <Box sx={blogPageStyles.comments}>
                     {comments.map((comment: CommentType) => {
@@ -65,6 +131,7 @@ const ViewBlog = () => {
                     })}
                 </Box>
             )}
+            </Box>
         </Box>
     )
 }

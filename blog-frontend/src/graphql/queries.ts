@@ -34,7 +34,7 @@ export const GET_USER_BLOGS = gql`
 `;
 
 export const GET_BLOG_BY_ID = gql`
-    query user($id:ID!){
+    query blog($id:ID!){
         blog(id:$id) {
             title
             content
